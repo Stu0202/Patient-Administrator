@@ -3,6 +3,7 @@ import {appointmentObj,editing} from './variables.js'
 import Appointment from './classes/Appoinment.js'
 import Notification from './classes/Notification.js'
 import {form,formInput,patientInput,ownerInput,dateInput,symptomsInput,emailInput} from './selectors.js'
+import { DB } from './Database.js'
 
 const appointments = new Appointment()
 
@@ -29,10 +30,17 @@ export function submitAppoinment(e){
         })
     }else{
         appointments.add({...appointmentObj})
-        new Notification({
+        const transaction = DB.transaction(['appoinments'],'readwrite')
+        const objectStore = transaction.objectStore('appoinments')
+        objectStore.add(appointmentObj)
+        transaction.oncomplete = function () {
+            console.log('Exito');
+             new Notification({
             text: 'Appointment added successfully',
             type: 'exito'
         })
+        }
+       
     }
 
 
