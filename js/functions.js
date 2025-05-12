@@ -35,10 +35,11 @@ export function submitAppoinment(e){
         objectStore.add(appointmentObj)
         transaction.oncomplete = function () {
             console.log('Exito');
-             new Notification({
+            new Notification({
             text: 'Appointment added successfully',
             type: 'exito'
         })
+        appointments.show();
         }
        
     }

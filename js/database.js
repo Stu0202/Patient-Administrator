@@ -1,18 +1,23 @@
 
+
 import { appointmentObj } from "./variables.js";
+
 
 export let DB;
 
-export function createDB(){
+
+export function createDB(appointment){
+ 
     const createDB = window.indexedDB.open('appoinments',1)
 
     createDB.onerror = function(){
         console.log('error');
     }
     createDB.onsuccess = function () {
-        console.log('Creado');
+        
         DB=createDB.result
-        console.log(DB);
+        
+        appointment.show()
     }
 
     createDB.onupgradeneeded = function (e) {
