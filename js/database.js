@@ -1,8 +1,5 @@
 
 
-import { appointmentObj } from "./variables.js";
-
-
 export let DB;
 
 
@@ -23,8 +20,9 @@ export function createDB(appointment){
     createDB.onupgradeneeded = function (e) {
         const db = e.target.result
          const objectStore = db.createObjectStore('appoinments', {
-            keyPath: appointmentObj.id,
-            autoIncrement:true
+            keyPath: 'id',
+            autoincrement: true
+          
         })
        
          objectStore.createIndex('patient','patient',{unique:false})

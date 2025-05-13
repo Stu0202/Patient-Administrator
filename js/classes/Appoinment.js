@@ -1,5 +1,6 @@
 import { containerAppointment } from "../selectors.js";
 import { DB } from "../Database.js";
+import { uploadAppointment } from "../functions.js";
 export default class Appointment{
     constructor(){
         this.appointments = []

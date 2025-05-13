@@ -13,7 +13,7 @@ export function appointmentData(e) {
 }
 export function submitAppoinment(e){
     e.preventDefault()
-
+  
     if(Object.values(appointmentObj).some( value => value.trim()==='')){
         new Notification({
             text: 'All fields are required',
@@ -24,17 +24,25 @@ export function submitAppoinment(e){
 
     if(editing.value){
         appointments.edit({...appointmentObj})
-        new Notification({
+
+        const transaction = DB.transaction(['appoinments'],'readwrite')
+        const objectStore = transaction.objectStore('appoinments')
+        objectStore.put(appointmentObj)
+        transaction.oncomplete = ()=>{
+            new Notification({
             text: 'Appointment updated successfully',
             type: 'exito'
         })
+        appointments.show()
+        }
+       
     }else{
         appointments.add({...appointmentObj})
         const transaction = DB.transaction(['appoinments'],'readwrite')
         const objectStore = transaction.objectStore('appoinments')
         objectStore.add(appointmentObj)
         transaction.oncomplete = function () {
-            console.log('Exito');
+            
             new Notification({
             text: 'Appointment added successfully',
             type: 'exito'
