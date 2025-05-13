@@ -20,17 +20,21 @@ export default class Appointment{
 
     delete(id){
         this.appointments = this.appointments.filter(appointment => appointment.id !== id)
-        this.show()
+        const transaction = DB.transaction(['appoinments'], 'readwrite');
+        const objectStore = transaction.objectStore('appoinments');
+        objectStore.delete(id);
+        transaction.oncomplete = () => {
+        this.show();
+    };
     }
 
     show(){
+        const self = this;
         
         while(containerAppointment.firstChild){
             containerAppointment.removeChild(containerAppointment.firstChild)
         }
-        if(this.appointments.length === 0){
-            containerAppointment.innerHTML = '<p class="text-xl mt-5 mb-10 text-center">There are not Patients</p>'
-        }
+       
 
         const objectStore = DB.transaction('appoinments').objectStore('appoinments')
         objectStore.openCursor().onsuccess=function (e) {
@@ -76,7 +80,7 @@ export default class Appointment{
              const deleteBtn = document.createElement('button');
              deleteBtn.classList.add('py-2', 'px-10', 'bg-red-600', 'hover:bg-red-700', 'text-white', 'font-bold', 'uppercase', 'rounded-lg', 'flex', 'items-center', 'gap-2');
              deleteBtn.innerHTML = 'Eliminar <svg fill="none" class="h-5 w-5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor"><path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'
-             deleteBtn.onclick = () => this.delete(appointment.id)
+             deleteBtn.onclick = () => self.delete(appointment.id)
 
              const containerButtons = document.createElement('DIV')
              containerButtons.classList.add('flex','justify-between','mt-10')
